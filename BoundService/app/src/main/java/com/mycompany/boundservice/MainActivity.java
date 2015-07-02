@@ -22,13 +22,13 @@ public class MainActivity extends ActionBarActivity {
 
     MyService buckysService;
     boolean isBound = false;
-    Messenger mService = null;
+    //Messenger mService = null;
 
     public void showTime(View view) {
-        //String currentTime =  buckysService.getCurrentTime();
-        //TextView buckysText = (TextView) findViewById(R.id.buckysText);
-        //buckysText.setText(currentTime);
-        if (!isBound)
+        String currentTime =  buckysService.getCurrentTime();
+        TextView buckysText = (TextView) findViewById(R.id.buckysText);
+        buckysText.setText(currentTime);
+        /**if (!isBound)
             return;
         // Create and send a message to the service, using a supported 'what' value
         Message msg = Message.obtain(null, MyService.MSG_SAY_HELLO, 0, 0);
@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
             mService.send(msg);
         } catch (RemoteException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -68,15 +68,15 @@ public class MainActivity extends ActionBarActivity {
     private ServiceConnection buckysConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            //MyLocalBinder binder = (MyLocalBinder) service;
-            //buckysService = binder.getService();
-            mService = new Messenger(service);
-            isBound = true;
+            MyLocalBinder binder = (MyLocalBinder) service;
+            buckysService = binder.getService();
+            //mService = new Messenger(service);
+            //isBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mService = null;
+            //mService = null;
             isBound = false;
         }
     };
