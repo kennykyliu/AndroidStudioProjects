@@ -1,2 +1,2 @@
 # AndroidStudioProjects
-Android Projects
+Android Studio Projects
