@@ -31,6 +31,9 @@
         ground round corned beef, ribeye swine filet mignon salami pork spare ribs pork chop
         brisket. Filet mignon shankle t-bone bacon. Turducken capicola turkey porchetta kielbasa
         shank pork loin jerky venison tenderloin boudin ham hock ground round.</string>
+    <string name="main_description">This is a basic Activity showing an Action Bar which has been
+        styled.
+    </string>
     <string name="image_header">%1$s by %2$s</string>
     <string name="title_activity_detail">DetailActivity</string>
 
@@ -38,4 +41,6 @@
     <string name="title_activity_item">Item</string>
     <string name="title_activity_square_frame_layout">SquareFrameLayout</string>
     <color name="white">#FFFFFF</color>
+    <string name="title_activity_calorie">Calorie</string>
+    <string name="title_activity_calories_main">CaloriesMain</string>
 </resources>

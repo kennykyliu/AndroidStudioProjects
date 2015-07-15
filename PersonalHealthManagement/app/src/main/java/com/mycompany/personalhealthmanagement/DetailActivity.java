@@ -19,10 +19,12 @@ package com.mycompany.personalhealthmanagement;
 import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.transition.Transition;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,6 +72,11 @@ public class DetailActivity extends Activity {
         // END_INCLUDE(detail_set_view_name)
 
         loadItem();
+    }
+
+    public void goMainPage(View view) {
+        Intent i = new Intent(this, mItem.getMainPageClass());
+        startActivity(i);
     }
 
     private void loadItem() {

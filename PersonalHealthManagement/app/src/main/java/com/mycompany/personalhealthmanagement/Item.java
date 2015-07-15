@@ -16,6 +16,8 @@
 
 package com.mycompany.personalhealthmanagement;
 
+import android.content.Intent;
+
 /**
  * Represents an Item in our application. Each item has a name, id, full size image url and
  * thumbnail url.
@@ -23,10 +25,10 @@ package com.mycompany.personalhealthmanagement;
 public class Item {
 
     public static Item[] ITEMS = new Item[] {
-            new Item("Carlos", "Romain Guya", R.drawable.health_apple, R.string.item_A),
-            new Item("Sleep management", "Romain Guyb", R.drawable.health_apple, R.string.item_B),
-            new Item("Personal Info", "Romain Guyc", R.drawable.health_apple, R.string.item_C),
-            new Item("Summary", "Romain Guyd", R.drawable.health_summary, R.string.bacon_ipsum),
+            new Item("Carlos", "Romain Guya", R.drawable.health_apple, R.string.item_A, CaloriesMain.class),
+            new Item("Sleep management", "Romain Guyb", R.drawable.health_apple, R.string.item_B, CaloriesMain.class),
+            new Item("Personal Info", "Romain Guyc", R.drawable.health_apple, R.string.item_C, CaloriesMain.class),
+            new Item("Summary", "Romain Guyd", R.drawable.health_summary, R.string.bacon_ipsum, CaloriesMain.class),
     };
 
     public static Item getItem(int id) {
@@ -42,12 +44,14 @@ public class Item {
     private final String mAuthor;
     private final int mImageId;
     private final int mContentId;
+    private Class<?>  mMainPageClass;
 
-    Item (String name, String author, int imageId, int contentId) {
+    Item (String name, String author, int imageId, int contentId, Class<?> mainPageClass) {
         mName = name;
         mAuthor = author;
         mImageId = imageId;
         mContentId = contentId;
+        mMainPageClass = mainPageClass;
     }
 
     public int getId() {
@@ -72,5 +76,9 @@ public class Item {
 
     public int getContentId() {
         return mContentId;
+    }
+
+    public Class<?> getMainPageClass() {
+        return mMainPageClass;
     }
 }
