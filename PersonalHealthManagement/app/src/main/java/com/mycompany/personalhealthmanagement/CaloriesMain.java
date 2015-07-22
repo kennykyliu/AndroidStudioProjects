@@ -6,6 +6,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +28,15 @@ import android.widget.Toast;
  * 'Android Action Bar Style Generator': http://jgilfelt.github.io/android-actionbarstylegenerator
  */
 public class CaloriesMain extends ActionBarActivity implements ActionBar.TabListener {
+    ListView itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calories_main);
+        //setContentView(R.layout.activity_calories_main);
+        setContentView(R.layout.activity_calories_item_select);
+        //itemList = (ListView) findViewById(R.id.itemList);
+        //itemList.setAdapter(new MyAdapter());
 
         // Set the Action Bar to use tabs for navigation
         ActionBar ab = getSupportActionBar();
@@ -52,16 +61,17 @@ public class CaloriesMain extends ActionBarActivity implements ActionBar.TabList
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // This is called when a tab is selected.
         int pos = tab.getPosition();
-        TextView infoText = (TextView) findViewById(R.id.infoText);
+        //TextView infoText = (TextView) findViewById(R.id.infoText);
+        itemList = (ListView) findViewById(R.id.itemList);
         switch (pos) {
             case 0:
-                infoText.setText("Hello Kenny 1!");
+                itemList.setAdapter(new CalItemsFoodAdapter());
                 break;
             case 1:
-                infoText.setText("Hello Kenny 2!");
+                itemList.setAdapter(new CalItemsBeverageAdapter());
                 break;
             case 2:
-                infoText.setText("Hello Kenny 3!");
+                itemList.setAdapter(new CalItemsExerciseAdapter());
                 break;
             default:
         }
@@ -77,5 +87,127 @@ public class CaloriesMain extends ActionBarActivity implements ActionBar.TabList
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // This is called when a previously selected tab is selected again.
+    }
+
+    /**
+     * A simple array adapter that creates a list of cheeses.
+     */
+    private class CalItemsFoodAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return CaloriesItems.CalItemsFood.length;
+        }
+
+        @Override
+        public String getItem(int position) {
+            return CaloriesItems.CalItemsFood[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return CaloriesItems.CalItemsFood[position].hashCode();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup container) {
+            final int pos = position;
+
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.calories_list_item, container, false);
+            }
+            final CheckBox calItemCheck = (CheckBox) convertView.findViewById(R.id.CalItemCheck);
+            calItemCheck.setOnClickListener(new CheckBox.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (calItemCheck.isChecked())
+                        Log.i("calmain", getItem(pos) + " be clicked!!!");
+                    else
+                        Log.i("calmain", getItem(pos) + " be unclicked...");
+                }
+            });
+
+            ((TextView) convertView.findViewById(android.R.id.text1))
+                    .setText(getItem(position));
+            return convertView;
+        }
+    }
+
+    private class CalItemsBeverageAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return CaloriesItems.CalItemBeverage.length;
+        }
+
+        @Override
+        public String getItem(int position) {
+            return CaloriesItems.CalItemBeverage[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return CaloriesItems.CalItemBeverage[position].hashCode();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup container) {
+            final int pos = position;
+
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.calories_list_item, container, false);
+            }
+            final CheckBox calItemCheck = (CheckBox) convertView.findViewById(R.id.CalItemCheck);
+            calItemCheck.setOnClickListener(new CheckBox.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (calItemCheck.isChecked())
+                        Log.i("calmain", getItem(pos) + " be clicked!!!");
+                    else
+                        Log.i("calmain", getItem(pos) + " be unclicked...");
+                }
+            });
+
+            ((TextView) convertView.findViewById(android.R.id.text1))
+                    .setText(getItem(position));
+            return convertView;
+        }
+    }
+
+    private class CalItemsExerciseAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return CaloriesItems.CalItemExercise.length;
+        }
+
+        @Override
+        public String getItem(int position) {
+            return CaloriesItems.CalItemExercise[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return CaloriesItems.CalItemExercise[position].hashCode();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup container) {
+            final int pos = position;
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.calories_list_item, container, false);
+            }
+
+            final CheckBox calItemCheck = (CheckBox) convertView.findViewById(R.id.CalItemCheck);
+            calItemCheck.setOnClickListener(new CheckBox.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (calItemCheck.isChecked())
+                        Log.i("calmain", getItem(pos) + " be clicked!!!");
+                    else
+                        Log.i("calmain", getItem(pos) + " be unclicked...");
+                }
+            });
+            ((TextView) convertView.findViewById(android.R.id.text1))
+                    .setText(getItem(position));
+            return convertView;
+        }
     }
 }

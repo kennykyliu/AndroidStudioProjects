@@ -43,4 +43,6 @@
     <color name="white">#FFFFFF</color>
     <string name="title_activity_calorie">Calorie</string>
     <string name="title_activity_calories_main">CaloriesMain</string>
+    <string name="title_activity_calories_item_select">CaloriesItemSelect</string>
+    <string name="intro_message">test</string>
 </resources>

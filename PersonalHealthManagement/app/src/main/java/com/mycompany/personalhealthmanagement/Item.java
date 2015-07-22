@@ -25,7 +25,7 @@ import android.content.Intent;
 public class Item {
 
     public static Item[] ITEMS = new Item[] {
-            new Item("Carlos", "Romain Guya", R.drawable.health_apple, R.string.item_A, CaloriesMain.class),
+            new Item("Calories", "Romain Guya", R.drawable.health_apple, R.string.item_A, CaloriesMain.class),
             new Item("Sleep management", "Romain Guyb", R.drawable.health_apple, R.string.item_B, CaloriesMain.class),
             new Item("Personal Info", "Romain Guyc", R.drawable.health_apple, R.string.item_C, CaloriesMain.class),
             new Item("Summary", "Romain Guyd", R.drawable.health_summary, R.string.bacon_ipsum, CaloriesMain.class),
