@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Age:"
+        android:id="@+id/ageTextView"
+        android:layout_marginTop="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="15dp" />
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/ageEditText"
+        android:layout_alignTop="@+id/ageTextView"
+        android:layout_toRightOf="@+id/ageTextView" />
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Weight:"
+        android:id="@+id/weightTextView"
+        android:layout_marginTop="38dp"
+        android:layout_below="@+id/ageEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="15dp" />
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/weightKGEditText"
+        android:layout_alignBottom="@+id/weightTextView"
+        android:layout_toRightOf="@+id/weightTextView"
+        android:layout_toEndOf="@+id/weightTextView"
+        android:layout_marginBottom="-15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Height:"
+        android:id="@+id/tallTextView"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/weightTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="15dp" />
+
+    <EditText
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/heightFTEditText"
+        android:layout_alignBottom="@+id/tallTextView"
+        android:layout_toRightOf="@+id/weightTextView"
+        android:layout_marginBottom="-15dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/savePersonalInfoButton"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/tallTextView"
+        android:layout_toRightOf="@+id/heightFTEditText"
+        android:layout_toEndOf="@+id/heightFTEditText"
+        android:layout_marginLeft="33dp"
+        android:layout_marginStart="33dp"
+        android:onClick="onSavePersonalInfoClick" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/button3"
+        android:layout_alignTop="@+id/savePersonalInfoButton"
+        android:layout_toLeftOf="@+id/savePersonalInfoButton"
+        android:layout_toStartOf="@+id/savePersonalInfoButton"
+        android:layout_marginRight="20dp"
+        android:onClick="onPersonalInfoBackClick" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/weightSpinner"
+        android:layout_alignTop="@+id/weightKGEditText"
+        android:layout_alignLeft="@+id/heightSpinner"
+        android:layout_alignStart="@+id/heightSpinner" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Gender:"
+        android:id="@+id/genderTextView"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/ageTextView"
+        android:layout_alignStart="@+id/ageTextView"
+        android:layout_marginTop="40dp" />
+
+    <Spinner
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/genderSpinner"
+        android:layout_alignBottom="@+id/genderTextView"
+        android:layout_alignLeft="@+id/ageEditText"
+        android:layout_alignStart="@+id/ageEditText"
+        android:layout_marginBottom="-15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="ft"
+        android:id="@+id/heightFTtextView"
+        android:layout_alignBottom="@+id/heightFTEditText"
+        android:layout_toRightOf="@+id/button3"
+        android:layout_toEndOf="@+id/button3"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="5dp" />
+
+    <EditText
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/heightINEditText"
+        android:layout_alignTop="@+id/heightFTEditText"
+        android:layout_alignLeft="@+id/savePersonalInfoButton"
+        android:layout_alignStart="@+id/savePersonalInfoButton"
+        android:layout_marginLeft="-3dp" />
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/heightCMEditText"
+        android:layout_alignBottom="@+id/heightFTtextView"
+        android:layout_toRightOf="@+id/genderTextView"
+        android:layout_toEndOf="@+id/genderTextView"
+        android:layout_marginBottom="-15dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/heightSpinner"
+        android:layout_alignTop="@+id/tallTextView"
+        android:layout_toRightOf="@+id/heightINEditText"
+        android:layout_toEndOf="@+id/heightINEditText" />
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/weightLBEditText"
+        android:layout_alignBottom="@+id/weightKGEditText"
+        android:layout_alignLeft="@+id/weightKGEditText"
+        android:layout_alignStart="@+id/weightKGEditText" />
+
+</RelativeLayout>

@@ -45,4 +45,17 @@
     <string name="title_activity_calories_main">CaloriesMain</string>
     <string name="title_activity_calories_item_select">CaloriesItemSelect</string>
     <string name="intro_message">test</string>
+    <string name="title_activity_personal_info">PersonalInfo</string>
+    <string-array name="weight_unit">
+        <item>kg</item>>
+        <item>lb</item>>
+    </string-array>
+    <string-array name="gender_unit">
+        <item>Male</item>>
+        <item>Female</item>>
+    </string-array>
+    <string-array name="height_unit">
+        <item>cm</item>>
+        <item>in</item>>
+    </string-array>
 </resources>

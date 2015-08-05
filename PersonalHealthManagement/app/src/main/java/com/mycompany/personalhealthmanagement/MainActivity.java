@@ -1,26 +1,31 @@
 package com.mycompany.personalhealthmanagement;
 
-import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.mobileconnectors.cognito.Record;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private static final String TAG = "PHM-Login";
+    private static final String KEY_DATASET_NAME = "dataset_name";
+
     EditText usernameInput;
     EditText pwdInput;
     ImageView titleImage;
-    static int userCount = 0;
+    private CognitoSyncManager client;
+    private AWSDataHandler awsDataHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,15 @@ public class MainActivity extends ActionBarActivity {
         pwdInput = (EditText) findViewById(R.id.pwdInput);
         titleImage = (ImageView) findViewById(R.id.titleImage);
         titleImage.setImageResource(R.drawable.health_guy);
+
+        /**
+         * Initializes the Amazon Cognito sync client.
+         * This must be call before you can use it.
+         */
+        CognitoSyncClientManager.init(this);
+        client = CognitoSyncClientManager.getInstance();
+        awsDataHandler = AWSDataHandler.getInstance();
+        awsDataHandler.refreshDatasetMetadata(MainActivity.this);
     }
 
     @Override
@@ -55,9 +69,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void signUp(View view) {
-        SharedPreferences sharedPerf = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = sharedPerf.edit();
         String username = usernameInput.getText().toString();
         String pwd = pwdInput.getText().toString();
 
@@ -77,24 +88,34 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
 
-        editor.putString("username" + userCount, usernameInput.getText().toString());
-        editor.putString("password" + userCount, pwdInput.getText().toString());
-        editor.apply();
+        Dataset accountDataset = awsDataHandler.getDataSet("account");
+        for (Record record : accountDataset.getAllRecords()) {
+            if (record.getKey().equals(username)) {
+                Toast.makeText(this, "User [" + username + "] is already exist. " +
+                               "Please try again", Toast.LENGTH_LONG).show();
+                return;
+            }
+            Log.i(TAG, "   Key = " + record.getKey());
+            Log.i(TAG, "   Value = " + record.getValue());
+        }
+        accountDataset.put(username, pwd);
+        Dataset personalDataset = client.openOrCreateDataset("Dataset_" + username);
+        personalDataset.put("username", username);
+        awsDataHandler.refreshDatasetMetadata(MainActivity.this);
         usernameInput.getText().clear();
         pwdInput.getText().clear();
-        userCount++;
-        Toast.makeText(this, "Saved: " + userCount, Toast.LENGTH_LONG).show();
     }
 
     public void signIn(View view) {
-        SharedPreferences sharedPerf = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String username = usernameInput.getText().toString();
         String pwd = pwdInput.getText().toString();
 
-        for (int i = 0; i < userCount; i++) {
-            if (sharedPerf.getString("username" + i, "").equals(username)) {
-                if (sharedPerf.getString("password" + i, "").equals(pwd)) {
+        Dataset accountDataset = awsDataHandler.getDataSet("account");
+        for (Record record : accountDataset.getAllRecords()) {
+            if (record.getKey().equals(username)) {
+                if (record.getValue().equals(pwd)) {
                     Intent intent = new Intent(this, HomeActivity.class);
+                    intent.putExtra(KEY_DATASET_NAME, "Dataset_" + username);
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, "Wrong password.\nPlease try again.", Toast.LENGTH_LONG).show();
@@ -103,5 +124,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }
         Toast.makeText(this, "Invalid user!!!\n\nPlease create an account first.", Toast.LENGTH_LONG).show();
+        pwdInput.getText().clear();
     }
 }
