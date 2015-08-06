@@ -43,6 +43,11 @@ public class MainActivity extends ActionBarActivity {
         CognitoSyncClientManager.init(this);
         client = CognitoSyncClientManager.getInstance();
         awsDataHandler = AWSDataHandler.getInstance();
+        ((DeveloperAuthenticationProvider) CognitoSyncClientManager.credentialsProvider
+                .getIdentityProvider()).login(
+                    getString(R.string.Cognito_access_name),
+                    getString(R.string.Cognito_access_pwd),
+                MainActivity.this);
         awsDataHandler.refreshDatasetMetadata(MainActivity.this);
     }
 
@@ -88,16 +93,16 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
 
-        Dataset accountDataset = awsDataHandler.getDataSet("account");
+        Dataset accountDataset = awsDataHandler.getDataSet(getString(R.string.account_dataset_name));
         for (Record record : accountDataset.getAllRecords()) {
             if (record.getKey().equals(username)) {
                 Toast.makeText(this, "User [" + username + "] is already exist. " +
                                "Please try again", Toast.LENGTH_LONG).show();
                 return;
             }
-            Log.i(TAG, "   Key = " + record.getKey());
-            Log.i(TAG, "   Value = " + record.getValue());
         }
+        /* On cognito server, store hash code from pwd + username */
+        pwd = String.valueOf((pwd + username).hashCode());
         accountDataset.put(username, pwd);
         Dataset personalDataset = client.openOrCreateDataset("Dataset_" + username);
         personalDataset.put("username", username);
@@ -109,8 +114,12 @@ public class MainActivity extends ActionBarActivity {
     public void signIn(View view) {
         String username = usernameInput.getText().toString();
         String pwd = pwdInput.getText().toString();
+        Dataset accountDataset = awsDataHandler.getDataSet(getString(R.string.account_dataset_name));
 
-        Dataset accountDataset = awsDataHandler.getDataSet("account");
+        /* We store hash code for pwd on server so that we should get
+         * the value first before comparing.
+         */
+        pwd = String.valueOf((pwd + username).hashCode());
         for (Record record : accountDataset.getAllRecords()) {
             if (record.getKey().equals(username)) {
                 if (record.getValue().equals(pwd)) {

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Personal Health Management</string>
+    <string name="Cognito_access_name">mycompany.personalhealthmanagement</string>
+    <string name="Cognito_access_pwd">mycompany.personalhealthmanagement.key</string>
+    <string name="account_dataset_name">account</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_section1">Section 1</string>

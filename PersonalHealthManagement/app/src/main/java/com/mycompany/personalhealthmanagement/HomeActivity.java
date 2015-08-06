@@ -49,11 +49,7 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
         Bundle bundle = getIntent().getExtras();
         awsDataHandler = AWSDataHandler.getInstance();
         datasetName = bundle.getString(KEY_DATASET_NAME);
-        Log.i("Home", "datasetName = " + datasetName);
         personalDataset = awsDataHandler.getDataSet(datasetName);
-        for (Record record : personalDataset.getAllRecords()) {
-            Log.i("Home", record.getKey() + "/ " + record.getValue());
-        }
     }
 
     /**

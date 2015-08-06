@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class CognitoSyncClientManager {
 
-    private static final String TAG = "CognitoSyncClientManager";
+    private static final String TAG = "PHM-CSC";
 
     /**
      * Enter here the Identity Pool associated with your app and the AWS
@@ -58,8 +58,20 @@ public class CognitoSyncClientManager {
         
         if (syncClient != null) return;
 
-        credentialsProvider = new CognitoCachingCredentialsProvider(context,
-                                    IDENTITY_POOL_ID, REGION);
+        useDeveloperAuthenticatedIdentities = useDeveloperAuthenticatedIdentities
+                && DeveloperAuthenticationProvider.isDeveloperAuthenticatedAppConfigured();
+        if (useDeveloperAuthenticatedIdentities) {
+            developerIdentityProvider = new DeveloperAuthenticationProvider(
+                    null, IDENTITY_POOL_ID, context, Regions.US_EAST_1);
+            credentialsProvider = new CognitoCachingCredentialsProvider(context, developerIdentityProvider,
+                    REGION);
+            Log.i(TAG, "Using developer auth identities");
+        } else {
+            credentialsProvider = new CognitoCachingCredentialsProvider(context, IDENTITY_POOL_ID,
+                    REGION);
+            Log.i(TAG, "Developer auth identities is not configured.");
+        }
+
 
         syncClient = new CognitoSyncManager(context, REGION, credentialsProvider);
     }
@@ -71,7 +83,7 @@ public class CognitoSyncClientManager {
      * @param providerName the name of the external identity provider
      * @param token openId token
      */
-/*    public static void addLogins(String providerName, String token) {
+    public static void addLogins(String providerName, String token) {
         if (syncClient == null) {
             throw new IllegalStateException("CognitoSyncClientManager not initialized yet");
         }
@@ -82,7 +94,7 @@ public class CognitoSyncClientManager {
         }
         logins.put(providerName, token);
         credentialsProvider.setLogins(logins);
-    }*/
+    }
 
     /**
      * Gets the singleton instance of the CognitoClient. init() must be called

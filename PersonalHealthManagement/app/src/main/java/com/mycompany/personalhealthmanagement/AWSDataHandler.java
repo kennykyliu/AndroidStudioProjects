@@ -83,7 +83,7 @@ public class AWSDataHandler {
         dataset.synchronize(new Dataset.SyncCallback() {
             @Override
             public void onSuccess(Dataset dataset, final List<Record> newRecords) {
-                Log.i("Sync", "success: " + dataset.getDatasetMetadata().getDatasetName());
+                Log.i("Sync", "success.");
             }
 
             @Override
