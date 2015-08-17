@@ -1,31 +1,34 @@
 package com.mycompany.personalhealthmanagement;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
-import com.amazonaws.mobileconnectors.cognito.Dataset;
-import com.amazonaws.mobileconnectors.cognito.Record;
+import java.util.ArrayList;
 
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements TaskCompleted {
 
     private static final String TAG = "PHM-Login";
-    private static final String KEY_DATASET_NAME = "dataset_name";
 
-    EditText usernameInput;
-    EditText pwdInput;
-    ImageView titleImage;
-    private CognitoSyncManager client;
-    private AWSDataHandler awsDataHandler;
+    private EditText usernameInput;
+    private EditText pwdInput;
+    private static Button signUpButton;
+    private static Button signInButton;
+    private ImageView titleImage;
+    private String username = null;
+    private TaskCompleted mCallback;
+    String pwd = null;
+
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +36,12 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         usernameInput = (EditText) findViewById(R.id.usernameInput);
         pwdInput = (EditText) findViewById(R.id.pwdInput);
+        signUpButton = (Button) findViewById(R.id.signUpButton);
+        signInButton = (Button) findViewById(R.id.signInButton);
         titleImage = (ImageView) findViewById(R.id.titleImage);
         titleImage.setImageResource(R.drawable.health_guy);
 
-        /**
-         * Initializes the Amazon Cognito sync client.
-         * This must be call before you can use it.
-         */
-        CognitoSyncClientManager.init(this);
-        client = CognitoSyncClientManager.getInstance();
-        awsDataHandler = AWSDataHandler.getInstance();
-        ((DeveloperAuthenticationProvider) CognitoSyncClientManager.credentialsProvider
-                .getIdentityProvider()).login(
-                    getString(R.string.Cognito_access_name),
-                    getString(R.string.Cognito_access_pwd),
-                MainActivity.this);
-        awsDataHandler.refreshDatasetMetadata(MainActivity.this);
+        DynamoDBManager.init(MainActivity.this);
     }
 
     @Override
@@ -74,10 +67,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void signUp(View view) {
-        String username = usernameInput.getText().toString();
-        String pwd = pwdInput.getText().toString();
 
-        /* Check username input */
+        username = usernameInput.getText().toString();
+        pwd = pwdInput.getText().toString();
+
+        // Check username input
         if (username.isEmpty()) {
             Toast.makeText(this, "Empty username!\nPlease try again.", Toast.LENGTH_LONG).show();
             usernameInput.getText().clear();
@@ -85,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
 
-        /* Check password input */
+        // Check password input
         if (pwd.isEmpty()) {
             Toast.makeText(this, "Empty password!\nPlease try again.", Toast.LENGTH_LONG).show();
             usernameInput.getText().clear();
@@ -93,46 +87,137 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
 
-        Dataset accountDataset = awsDataHandler.getDataSet(getString(R.string.account_dataset_name));
-        for (Record record : accountDataset.getAllRecords()) {
-            if (record.getKey().equals(username)) {
-                Toast.makeText(this, "User [" + username + "] is already exist. " +
-                               "Please try again", Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-        /* On cognito server, store hash code from pwd + username */
-        pwd = String.valueOf((pwd + username).hashCode());
-        accountDataset.put(username, pwd);
-        Dataset personalDataset = client.openOrCreateDataset("Dataset_" + username);
-        personalDataset.put("username", username);
-        awsDataHandler.refreshDatasetMetadata(MainActivity.this);
-        usernameInput.getText().clear();
-        pwdInput.getText().clear();
+        dialog = ProgressDialog.show(MainActivity.this, "Data Syncing...",
+                "Please wait");
+
+        UserProfile userPref = new UserProfile(Constants.DynamoDBManagerType.CHECK_USER_EXISTENT);
+        new DynamoDBManagerTask().execute(userPref);
     }
 
     public void signIn(View view) {
-        String username = usernameInput.getText().toString();
-        String pwd = pwdInput.getText().toString();
-        Dataset accountDataset = awsDataHandler.getDataSet(getString(R.string.account_dataset_name));
+        UserProfile userPref = new UserProfile(Constants.DynamoDBManagerType.USER_LOGIN);
+        new DynamoDBManagerTask().execute(userPref);
+        username = usernameInput.getText().toString();
+        pwd = pwdInput.getText().toString();
+    }
 
-        /* We store hash code for pwd on server so that we should get
-         * the value first before comparing.
-         */
-        pwd = String.valueOf((pwd + username).hashCode());
-        for (Record record : accountDataset.getAllRecords()) {
-            if (record.getKey().equals(username)) {
-                if (record.getValue().equals(pwd)) {
-                    Intent intent = new Intent(this, HomeActivity.class);
-                    intent.putExtra(KEY_DATASET_NAME, "Dataset_" + username);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, "Wrong password.\nPlease try again.", Toast.LENGTH_LONG).show();
+    @Override
+    public void onTaskComplete(Constants.DynamoDBManagerType ddbType,
+                               ArrayList<UserProfile> localUP) {
+        int currUserCount = 0;
+
+        switch (ddbType) {
+            case CHECK_USER_EXISTENT:
+                for (UserProfile res : localUP) {
+                    /* Index 1 ~ 999 stores account info for all users */
+                    if (res.getIndexNo() > 0 && res.getIndexNo() <= Constants.MAX_SIGNUP_USER
+                            && username.equals(res.getUserName())) {
+                        Toast.makeText(this, "User [" + username + "] is already exist. " +
+                                "Please try again", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    /* Index 0 stores current user numbers */
+                    if (res.getIndexNo() == 0) {
+                        currUserCount = res.getNValue();
+                    }
                 }
-                return;
+
+                // Index 10stores current user numbers
+                UserProfile userPref0 = new UserProfile(0, null, null, 0, currUserCount + 1, null, Constants.DynamoDBManagerType.INSERT_ITEM);
+                new DynamoDBManagerTask().execute(userPref0);
+                /* Index 1 ~ 999 stores account info for all users */
+                UserProfile userPref1 = new UserProfile(currUserCount + 1,
+                        username, null, 0, (currUserCount + 1) * 1000, pwd, Constants.DynamoDBManagerType.INSERT_ITEM);
+                new DynamoDBManagerTask().execute(userPref1);
+                Toast.makeText(this, "New account [" + username + "] is created successfully!!! ",
+                                                Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+                usernameInput.getText().clear();
+                pwdInput.getText().clear();
+                break;
+            case USER_LOGIN:
+                for (UserProfile res : localUP) {
+                    if (res.getIndexNo() > 0 && res.getIndexNo() <= Constants.MAX_SIGNUP_USER &&
+                            username.equals(res.getUserName())) {
+                        if (pwd.equals(res.getSValue())) {
+                            Constants.currUserName = username;
+                            Constants.currUserID = res.getIndexNo();
+                            /* Send data for retrieve person info */
+                            PersonalInfo.retrievePersonalInfo(localUP);
+                            Statistics.retrieveStatData(localUP);
+                            Intent intent = new Intent(this, HomeActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(this, "Wrong password.\nPlease try again.", Toast.LENGTH_LONG).show();
+                        }
+                        return;
+                    }
+                }
+                Toast.makeText(this, "Invalid user!!!\n\nPlease create an account first.", Toast.LENGTH_LONG).show();
+                pwdInput.getText().clear();
+                break;
+            case INSERT_ITEM:
+                break;
+            case LIST_ITEMS:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static void refreshDataFail() {
+        signUpButton.setEnabled(false);
+        signInButton.setEnabled(false);
+        return;
+    }
+
+    private class DynamoDBManagerTask extends
+            AsyncTask<UserProfile, Void, AWSDynamoDBManagerTaskResult> {
+        @Override
+        protected void onPreExecute() {
+            mCallback = (TaskCompleted) MainActivity.this;
+
+        }
+
+        protected AWSDynamoDBManagerTaskResult doInBackground(
+                UserProfile... userPref) {
+
+            String tableStatus = DynamoDBManager.getTestTableStatus();
+            Constants.DynamoDBManagerType actiontype = userPref[0].getActionType();
+
+            AWSDynamoDBManagerTaskResult result = new AWSDynamoDBManagerTaskResult();
+            result.setTableStatus(tableStatus);
+            result.setTaskType(actiontype);
+
+            if (actiontype == Constants.DynamoDBManagerType.CREATE_TABLE) {
+                if (tableStatus.length() == 0) {
+                    DynamoDBManager.createTable();
+                }
+            } else if (actiontype == Constants.DynamoDBManagerType.INSERT_ITEM) {
+                if (tableStatus.equalsIgnoreCase("ACTIVE")) {
+                    DynamoDBManager.insertItem(userPref[0]);
+                }
+            } else if (actiontype == Constants.DynamoDBManagerType.LIST_ITEMS ||
+                        actiontype == Constants.DynamoDBManagerType.CHECK_USER_EXISTENT ||
+                        actiontype == Constants.DynamoDBManagerType.USER_LOGIN) {
+                if (tableStatus.equalsIgnoreCase("ACTIVE")) {
+                    result.setItemList(DynamoDBManager.getItemList());
+                }
+            } else if (actiontype == Constants.DynamoDBManagerType.GET_ITEM) {
+                if (tableStatus.equalsIgnoreCase("ACTIVE")) {
+                    DynamoDBManager.getItemList();
+                }
+            }
+
+            return result;
+        }
+
+        protected void onPostExecute(AWSDynamoDBManagerTaskResult result) {
+            if (result.getTaskType() == Constants.DynamoDBManagerType.LIST_ITEMS ||
+                result.getTaskType() == Constants.DynamoDBManagerType.CHECK_USER_EXISTENT ||
+                    result.getTaskType() == Constants.DynamoDBManagerType.USER_LOGIN) {
+                mCallback.onTaskComplete(result.getTaskType(), result.getItemList());
             }
         }
-        Toast.makeText(this, "Invalid user!!!\n\nPlease create an account first.", Toast.LENGTH_LONG).show();
-        pwdInput.getText().clear();
     }
 }

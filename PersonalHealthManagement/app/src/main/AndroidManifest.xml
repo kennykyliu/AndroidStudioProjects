@@ -35,6 +35,14 @@
             android:name=".PersonalInfo"
             android:label="@string/title_activity_personal_info" >
         </activity>
+        <activity
+            android:name=".PlotActivity"
+            android:label="@string/title_activity_simple_xyplot" >
+        </activity>
+        <activity
+            android:name=".Statistics"
+            android:label="@string/title_activity_statistics" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,7 +1,9 @@
 package com.mycompany.personalhealthmanagement;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,23 +13,31 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.amazonaws.mobileconnectors.cognito.Dataset;
-import com.amazonaws.mobileconnectors.cognito.Record;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
-public class PersonalInfo extends ActionBarActivity {
+public class PersonalInfo extends FragmentActivity implements TaskCompleted {
     private static final String TAG = "PHM-PersonalInfo";
-    private static final String KEY_DATASET_NAME = "dataset_name";
 
-    private Spinner genderSpinner;
+    private static Spinner genderSpinner;
     private Spinner weightSpinner;
     private Spinner heightSpinner;
     private ArrayAdapter<CharSequence> genderAdapter;
     private ArrayAdapter<CharSequence> weightAdapter;
     private ArrayAdapter<CharSequence> heightAdapter;
-    private String gender = null;
+    private static String gender = null;
     private String weightUnit = null;
     private String heightUnit = null;
+    private static int age = 0;
+    private static int weightKG = 0;
+    private static int weightLB = 0;
+    private static int heightCM = 0;
+    private static int heightFT = 0;
+    private static int heightIN = 0;
+    private static long date = 0;
     private EditText ageEditText;
     private EditText weightKGEditText;
     private EditText weightLBEditText;
@@ -35,16 +45,14 @@ public class PersonalInfo extends ActionBarActivity {
     private EditText heightFTEditText;
     private EditText heightINEditText;
     private TextView heightFTtextView;
-    private AWSDataHandler awsDataHandler;
-    private Dataset personalDataset;
-    private String datasetName;
-
+    private static TextView dateTextView;
+    private TaskCompleted mCallback;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_info);
-        Bundle bundle = getIntent().getExtras();
         genderSpinner = (Spinner)findViewById(R.id.genderSpinner);
         weightSpinner = (Spinner)findViewById(R.id.weightSpinner);
         heightSpinner = (Spinner)findViewById(R.id.heightSpinner);
@@ -55,6 +63,7 @@ public class PersonalInfo extends ActionBarActivity {
         heightINEditText = (EditText) findViewById(R.id.heightINEditText);
         heightCMEditText = (EditText) findViewById(R.id.heightCMEditText);
         heightFTtextView = (TextView) findViewById(R.id.heightFTtextView);
+        dateTextView = (TextView) findViewById(R.id.dateTextView);
 
         genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender_unit,
                                             android.R.layout.simple_spinner_item);
@@ -68,6 +77,44 @@ public class PersonalInfo extends ActionBarActivity {
         genderSpinner.setAdapter(genderAdapter);
         weightSpinner.setAdapter(weightAdapter);
         heightSpinner.setAdapter(heightAdapter);
+
+        /* Set up data */
+        if ("Male".equals(gender)) {
+            genderSpinner.setSelection(0);
+        } else if ("Female".equals(gender)) {
+            genderSpinner.setSelection(1);
+        }
+
+        if (age > 0) {
+            ageEditText.setText(Integer.toString(age));
+        }
+
+        if (weightKG > 0) {
+            weightKGEditText.setText(Integer.toString(weightKG));
+        }
+
+        if (weightLB > 0) {
+            weightLBEditText.setText(Integer.toString(weightLB));
+        }
+
+        if (heightCM > 0) {
+            heightCMEditText.setText(Integer.toString(heightCM));
+        }
+
+        if (heightFT > 0) {
+            heightFTEditText.setText(Integer.toString(heightFT));
+        }
+
+        if (heightIN > 0) {
+            heightINEditText.setText(Integer.toString(heightIN));
+        }
+
+        if (date > 0) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            Date d = new Date(date);
+            dateTextView.setText(dateFormat.format(d));
+        }
+
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -120,11 +167,6 @@ public class PersonalInfo extends ActionBarActivity {
 
             }
         });
-
-        awsDataHandler = AWSDataHandler.getInstance();
-        datasetName = bundle.getString(KEY_DATASET_NAME);
-        personalDataset = awsDataHandler.getDataSet(datasetName);
-        getPersonalInfo();
     }
 
     @Override
@@ -150,47 +192,85 @@ public class PersonalInfo extends ActionBarActivity {
     }
 
     public void onSavePersonalInfoClick(View view) {
-        personalDataset.put("gender", gender);
-        personalDataset.put("age", ageEditText.getText().toString());
-        personalDataset.put("weight_unit", weightUnit);
-        personalDataset.put("height_unit", heightUnit);
+        if (date == 0) {
+            Calendar cal = Calendar.getInstance();
+            date = cal.getTimeInMillis();
+        }
+        long itemIndex = date / 1000000 * 1000000 + Constants.currUserID * 1000;
+        dialog = ProgressDialog.show(PersonalInfo.this, "Data Syncing...",
+                "Please wait");
+        UserProfile userPref0 = new UserProfile(itemIndex++, Constants.currUserName, "gender",
+                date, 0, gender, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO);
+        new DynamoDBManagerTask().execute(userPref0);
+
+        UserProfile userPref1 = new UserProfile(itemIndex++, Constants.currUserName, "age",
+                date, Integer.parseInt(ageEditText.getText().toString()), null, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO);
+        new DynamoDBManagerTask().execute(userPref1);
+
+        UserProfile userPref2 = new UserProfile(itemIndex++, Constants.currUserName, "weight_unit",
+                date, 0, weightUnit, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO);
+        new DynamoDBManagerTask().execute(userPref2);
+
+        UserProfile userPref3 = new UserProfile(itemIndex++, Constants.currUserName, "height_unit",
+                date, 0, heightUnit, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO);
+        new DynamoDBManagerTask().execute(userPref3);
+
         if (weightUnit.equals("kg")) {
-            personalDataset.put("weight_kg", weightKGEditText.getText().toString());
+            UserProfile userPref4 = new UserProfile(itemIndex++, Constants.currUserName, "weight_kg",
+                    date, Integer.parseInt(weightKGEditText.getText().toString()), null, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO);
+            new DynamoDBManagerTask().execute(userPref4);
         } else {
-            personalDataset.put("weight_lb", weightLBEditText.getText().toString());
+            UserProfile userPref4 = new UserProfile(itemIndex++, Constants.currUserName, "weight_lb",
+                    date, Integer.parseInt(weightLBEditText.getText().toString()), null, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO);
+            new DynamoDBManagerTask().execute(userPref4);
         }
         if (heightUnit.equals("cm")) {
-            personalDataset.put("height_cm", heightCMEditText.getText().toString());
+            UserProfile userPref5 = new UserProfile(itemIndex++, Constants.currUserName, "height_cm",
+                    date, Integer.parseInt(heightCMEditText.getText().toString()), null, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO_HEIGHT);
+            new DynamoDBManagerTask().execute(userPref5);
         } else {
-            personalDataset.put("height_ft", heightFTEditText.getText().toString());
-            personalDataset.put("height_in", heightINEditText.getText().toString());
+            UserProfile userPref5 = new UserProfile(itemIndex++, Constants.currUserName, "height_ft",
+                    date, Integer.parseInt(heightFTEditText.getText().toString()), null, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO_HEIGHT);
+            new DynamoDBManagerTask().execute(userPref5);
+            UserProfile userPref6 = new UserProfile(itemIndex++, Constants.currUserName, "height_in",
+                    date, Integer.parseInt(heightINEditText.getText().toString()), null, Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO_HEIGHT);
+            new DynamoDBManagerTask().execute(userPref6);
         }
-        awsDataHandler.refreshDatasetMetadata(PersonalInfo.this);
 
         return;
     }
 
-    public void getPersonalInfo() {
-        for (Record record : personalDataset.getAllRecords()) {
-            String key = record.getKey();
-            if (key.equals("gender")) {
-                if (record.getValue().equals("Male")) {
-                    genderSpinner.setSelection(0);
-                } else {
-                    genderSpinner.setSelection(1);
+    public static void retrievePersonalInfo(
+            ArrayList<UserProfile> localUP) {
+        for (UserProfile res : localUP) {
+            if ((res.getIndexNo() / 1000) % 1000 == Constants.currUserID) {
+                String key = res.getItemName();
+                if (key == null) {
+                    continue;
                 }
-            } else if (key.equals("age")) {
-                ageEditText.setText(record.getValue());
-            } else if (key.equals("weight_kg")) {
-                weightKGEditText.setText(record.getValue());
-            } else if (key.equals("weight_lb")) {
-                weightLBEditText.setText(record.getValue());
-            } else if (key.equals("height_cm")) {
-                heightCMEditText.setText(record.getValue());
-            } else if (key.equals("height_ft")) {
-                heightFTEditText.setText(record.getValue());
-            } else if (key.equals("height_in")) {
-                heightINEditText.setText(record.getValue());
+                /* Get latest data to show on screen */
+                if (key.equals("gender")) {
+                    if (res.getDate() > date) {
+                        date = res.getDate();
+                        gender = res.getSValue();
+                    } else {
+                        continue;
+                    }
+                }
+
+                if (key.equals("age")) {
+                    age = res.getNValue();
+                } else if (key.equals("weight_kg")) {
+                    weightKG = res.getNValue();
+                } else if (key.equals("weight_lb")) {
+                    weightLB = res.getNValue();
+                } else if (key.equals("height_cm")) {
+                    heightCM = res.getNValue();
+                } else if (key.equals("height_ft")) {
+                    heightFT = res.getNValue();
+                } else if (key.equals("height_in")) {
+                    heightIN = res.getNValue();
+                }
             }
         }
 
@@ -199,5 +279,70 @@ public class PersonalInfo extends ActionBarActivity {
 
     public void onPersonalInfoBackClick(View view) {
         super.onBackPressed();
+    }
+
+    public void onSetDateClick(View view) {
+        PickDateDialogs pickDateDialogs = new PickDateDialogs();
+        pickDateDialogs.show(getSupportFragmentManager(), "Please choose date.");
+    }
+
+    public static void showDate(long dateInMilli) {
+        date = dateInMilli;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Date d = new Date(date);
+        dateTextView.setText(dateFormat.format(d));
+    }
+
+    @Override
+    public void onTaskComplete(Constants.DynamoDBManagerType ddbType,
+                               ArrayList<UserProfile> localUP) {
+        switch (ddbType) {
+            case SYNC_PERSONAL_INFO_HEIGHT:
+                dialog.dismiss();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private class DynamoDBManagerTask extends
+            AsyncTask<UserProfile, Void, AWSDynamoDBManagerTaskResult> {
+        @Override
+        protected void onPreExecute() {
+            mCallback = (TaskCompleted) PersonalInfo.this;
+        }
+
+        protected AWSDynamoDBManagerTaskResult doInBackground(
+                UserProfile... userPref) {
+
+            String tableStatus = DynamoDBManager.getTestTableStatus();
+            Constants.DynamoDBManagerType actiontype = userPref[0].getActionType();
+
+            AWSDynamoDBManagerTaskResult result = new AWSDynamoDBManagerTaskResult();
+            result.setTableStatus(tableStatus);
+            result.setTaskType(actiontype);
+
+            if (actiontype== Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO ||
+                    actiontype== Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO_HEIGHT) {
+                if (tableStatus.equalsIgnoreCase("ACTIVE")) {
+                    DynamoDBManager.insertItem(userPref[0]);
+                }
+            } else if (actiontype == Constants.DynamoDBManagerType.LIST_ITEMS ||
+                    actiontype == Constants.DynamoDBManagerType.CHECK_USER_EXISTENT ||
+                    actiontype == Constants.DynamoDBManagerType.USER_LOGIN) {
+                if (tableStatus.equalsIgnoreCase("ACTIVE")) {
+                    result.setItemList(DynamoDBManager.getItemList());
+                }
+            }
+
+            return result;
+        }
+
+        protected void onPostExecute(AWSDynamoDBManagerTaskResult result) {
+            if (result.getTaskType() == Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO ||
+                    result.getTaskType() == Constants.DynamoDBManagerType.SYNC_PERSONAL_INFO_HEIGHT) {
+                mCallback.onTaskComplete(result.getTaskType(), result.getItemList());
+            }
+        }
     }
 }

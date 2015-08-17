@@ -16,8 +16,6 @@
 
 package com.mycompany.personalhealthmanagement;
 
-import com.squareup.picasso.Picasso;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -27,6 +25,8 @@ import android.transition.Transition;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * Our secondary Activity which is launched from {@link MainActivity}. Has a simple detail UI
@@ -42,6 +42,12 @@ public class DetailActivity extends Activity {
 
     // View name of the header title. Used for activity scene transitions
     public static final String VIEW_NAME_HEADER_TITLE = "detail:header:title";
+
+    // Plot data
+    public static final String PLOT_DATA_X = "detail:plot_x";
+    public static final String PLOT_DATA_Y = "detail:plot_y";
+    public static final String PLOT_DATA_X_SIZE = "detail:plot_x_size";
+    public static final String PLOT_DATA_Y_SIZE = "detail:plot_y_size";
 
     private ImageView mHeaderImageView;
     private TextView mHeaderTitle;

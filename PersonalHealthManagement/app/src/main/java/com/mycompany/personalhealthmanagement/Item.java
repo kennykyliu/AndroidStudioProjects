@@ -16,8 +16,6 @@
 
 package com.mycompany.personalhealthmanagement;
 
-import android.content.Intent;
-
 /**
  * Represents an Item in our application. Each item has a name, id, full size image url and
  * thumbnail url.
@@ -28,7 +26,7 @@ public class Item {
             new Item("Personal Info", "Romain Guya", R.drawable.health_apple, R.string.item_A, CaloriesMain.class),
             new Item("Calories", "Romain Guya", R.drawable.health_apple, R.string.item_A, CaloriesMain.class),
             new Item("Sleep management", "Romain Guyb", R.drawable.health_apple, R.string.item_B, CaloriesMain.class),
-            new Item("Personal Info", "Romain Guyc", R.drawable.health_apple, R.string.item_C, CaloriesMain.class),
+            new Item("Statistics", "Romain Guyc", R.drawable.health_apple, R.string.item_C, Statistics.class),
             new Item("Summary", "Romain Guyd", R.drawable.health_summary, R.string.bacon_ipsum, CaloriesMain.class),
     };
 

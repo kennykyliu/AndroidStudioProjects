@@ -1,10 +1,6 @@
 package com.mycompany.personalhealthmanagement;
 
 
-import com.amazonaws.mobileconnectors.cognito.Dataset;
-import com.amazonaws.mobileconnectors.cognito.Record;
-import com.squareup.picasso.Picasso;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +16,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Displays a grid of items which an image and title. When the
  * user clicks on an item, {@link DetailActivity} is launched, using the Activity Scene Transitions
@@ -31,9 +29,6 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
 
     private GridView mGridView;
     private GridAdapter mAdapter;
-    private AWSDataHandler awsDataHandler;
-    private Dataset personalDataset;
-    private String datasetName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,9 +42,6 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
         mGridView.setAdapter(mAdapter);
 
         Bundle bundle = getIntent().getExtras();
-        awsDataHandler = AWSDataHandler.getInstance();
-        datasetName = bundle.getString(KEY_DATASET_NAME);
-        personalDataset = awsDataHandler.getDataSet(datasetName);
     }
 
     /**
@@ -65,7 +57,9 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
         Log.i(TAG, "Name = " + mItem.getName());
         if (mItem.getName().equals("Personal Info")) {
             Intent intent = new Intent(this, PersonalInfo.class);
-            intent.putExtra(KEY_DATASET_NAME, datasetName);
+            startActivity(intent);
+        } else if (mItem.getName().equals("Statistics")) {
+            Intent intent = new Intent(this, Statistics.class);
             startActivity(intent);
         } else {
             // Construct an Intent as normal

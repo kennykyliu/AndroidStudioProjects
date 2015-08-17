@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PersonalHealthManagement.iml" filepath="$PROJECT_DIR$/PersonalHealthManagement.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dynamoDBMapper_UserPreference/dynamoDBMapper_UserPreference.iml" filepath="$PROJECT_DIR$/dynamoDBMapper_UserPreference/dynamoDBMapper_UserPreference.iml" />
     </modules>
   </component>
 </project>

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Personal Health Management</string>
-    <string name="Cognito_access_name">mycompany.personalhealthmanagement</string>
-    <string name="Cognito_access_pwd">mycompany.personalhealthmanagement.key</string>
+    <string name="Cognito_access_name">personalhealthmanagement</string>
+    <string name="Cognito_access_pwd">personalhealthmanagement2015</string>
     <string name="account_dataset_name">account</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="action_settings">Settings</string>
@@ -61,4 +61,8 @@
         <item>cm</item>>
         <item>in</item>>
     </string-array>
+    <string name="title_activity_simple_xyplot">SimpleXYPlotActivity</string>
+    <string name="ts_plot1_title">Yearly UFO Sightings</string>
+    <string name="title_activity_cognito_setting">cognitoSetting</string>
+    <string name="title_activity_statistics">Statistics</string>
 </resources>
