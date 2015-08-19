@@ -43,6 +43,21 @@
             android:name=".Statistics"
             android:label="@string/title_activity_statistics" >
         </activity>
+        <activity
+            android:name=".UserPreference"
+            android:label="@string/title_activity_user_preference" >
+        </activity>
+
+        <service
+            android:name=".MySensorDataService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <activity
+            android:name=".SleepManagement"
+            android:label="@string/title_activity_sleep_management" >
+        </activity>
     </application>
 
 </manifest>

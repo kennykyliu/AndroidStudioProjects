@@ -2,6 +2,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mycompany.personalhealthmanagement.PersonalInfo">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item
+        android:id="@+id/Weight_in_kg"
+        android:title="Weight in KG"
+        />
+    <item
+        android:id="@+id/Weight_in_lb"
+        android:title="Weight in LB"
+        />
+    <item
+        android:id="@+id/Height_in_cm"
+        android:title="Height in CM"
+        />
+    <item
+        android:id="@+id/Height_in_ft_in"
+        android:title="Height in ft and in"
+        />
 </menu>

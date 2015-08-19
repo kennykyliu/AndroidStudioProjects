@@ -14,7 +14,7 @@
   limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -24,7 +24,10 @@
     <TextView style="@style/DescriptionBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/intro_message" />
+        android:id="@+id/calTitleTextView"
+        android:layout_toStartOf="@+id/calSaveButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <!--
         When a ListView has a choiceMode set, it will allow users to "choose"
@@ -43,12 +46,53 @@
         you should set the android:scrollbarStyle such that the scrollbar
         doesn'isn't inset.
     -->
+
     <ListView android:id="@+id/itemList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.85"
         android:paddingLeft="@dimen/page_margin"
         android:paddingRight="@dimen/page_margin"
         android:scrollbarStyle="outsideOverlay"
-        android:choiceMode="multipleChoice" />
-</LinearLayout>
+        android:choiceMode="multipleChoice"
+        android:layout_below="@+id/calTitleTextView"
+        android:layout_above="@+id/calSaveButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/calSaveButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="82dp"
+        android:layout_marginEnd="82dp"
+        android:onClick="onCalSaveClick" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/calBackButton"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/calSaveButton"
+        android:layout_toStartOf="@+id/calSaveButton"
+        android:layout_marginRight="42dp"
+        android:layout_marginEnd="42dp"
+        android:onClick="onCalBackClick" />
+
+    <TextView
+        style="@style/DescriptionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/calResultTextView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="130dp" />
+
+</RelativeLayout>

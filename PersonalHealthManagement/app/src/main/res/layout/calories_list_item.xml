@@ -25,4 +25,23 @@
         android:layout_alignTop="@android:id/text1"
         android:layout_toRightOf="@android:id/text1" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/CalItemNameTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/CalNumberTextView"
+        android:layout_toLeftOf="@+id/CalItemCheck"
+        android:layout_alignTop="@android:id/text1"
+        android:layout_alignBottom="@android:id/text1"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="50dp" />
+
 </RelativeLayout>

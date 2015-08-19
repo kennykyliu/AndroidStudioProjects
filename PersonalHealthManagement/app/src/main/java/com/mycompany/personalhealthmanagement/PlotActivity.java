@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -27,7 +28,12 @@ import java.util.Date;
 
 public class PlotActivity extends Activity {
 
+    private final String TAG = "PHM-Plot";
     private XYPlot plot1;
+    private String plotType = "";
+    private String plotUnit = "";
+    int plotLowBound = Integer.MAX_VALUE;
+    int plotHighBound = Integer.MIN_VALUE;
     Number[] xData;
     Number[] yData;
 
@@ -35,10 +41,12 @@ public class PlotActivity extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.time_series_example);
+        setContentView(R.layout.plot);
         ArrayList<String> x_data = getIntent().getStringArrayListExtra(DetailActivity.PLOT_DATA_X);
         int data_size = getIntent().getIntExtra(DetailActivity.PLOT_DATA_X_SIZE, 0);
         ArrayList<String> y_data = getIntent().getStringArrayListExtra(DetailActivity.PLOT_DATA_Y);
+        plotType = getIntent().getStringExtra(DetailActivity.PLOT_TYPE);
+        plotUnit = getIntent().getStringExtra(DetailActivity.PLOT_UNIT);
 
         xData = new Number[data_size];
         yData = new Number[data_size];
@@ -46,10 +54,12 @@ public class PlotActivity extends Activity {
         for (int i = 0; i < data_size; i++) {
             xData[i] = Long.parseLong(x_data.get(i));
             yData[i] = Long.parseLong(y_data.get(i));
-        }
-
-        for (int i = 0; i < data_size; i++) {
-            Log.i("Plot!", xData[i] + ": " + yData[i]);
+            if (yData[i].intValue() > plotHighBound) {
+                plotHighBound = yData[i].intValue() + 50;
+            }
+            if (yData[i].intValue() < plotLowBound) {
+                plotLowBound = yData[i].intValue() - 50;
+            }
         }
 
         plot1 = (XYPlot) findViewById(R.id.plot1);
@@ -58,7 +68,7 @@ public class PlotActivity extends Activity {
         XYSeries series2 = new SimpleXYSeries(
                 Arrays.asList(xData),
                 Arrays.asList(yData),
-                "Sightings in USA");
+                plotType);
 
         plot1.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
         plot1.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
@@ -94,11 +104,11 @@ public class PlotActivity extends Activity {
 
         // draw a domain tick for each year:
         plot1.setDomainStep(XYStepMode.SUBDIVIDE, xData.length);
-        plot1.setRangeBoundaries(10, 150, BoundaryMode.FIXED);
+        plot1.setRangeBoundaries(plotLowBound, plotHighBound, BoundaryMode.FIXED);
 
         // customize our domain/range labels
-        plot1.setDomainLabel("Year");
-        plot1.setRangeLabel("# of Sightings");
+        plot1.setDomainLabel("Date");
+        plot1.setRangeLabel(plotUnit);
 
         // get rid of decimal points in our range labels:
         plot1.setRangeValueFormat(new DecimalFormat("0"));
@@ -109,7 +119,7 @@ public class PlotActivity extends Activity {
             // create a simple date format that draws on the year portion of our timestamp.
             // see http://download.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html
             // for a full description of SimpleDateFormat.
-            private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
@@ -135,5 +145,9 @@ public class PlotActivity extends Activity {
         // by default, AndroidPlot displays developer guides to aid in laying out your plot.
         // To get rid of them call disableAllMarkup():
         //plot1.disableAllMarkup();
+    }
+
+    public void onPlotBackClick(View view) {
+        super.onBackPressed();
     }
 }

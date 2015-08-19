@@ -17,7 +17,6 @@
 package com.mycompany.personalhealthmanagement;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
@@ -27,6 +26,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Our secondary Activity which is launched from {@link MainActivity}. Has a simple detail UI
@@ -48,6 +51,13 @@ public class DetailActivity extends Activity {
     public static final String PLOT_DATA_Y = "detail:plot_y";
     public static final String PLOT_DATA_X_SIZE = "detail:plot_x_size";
     public static final String PLOT_DATA_Y_SIZE = "detail:plot_y_size";
+    public static final String PLOT_TYPE = "detail:plot_type";
+    public static final String PLOT_UNIT = "detail:plot_unit";
+
+    public static double bmi = 0;
+    public static long bmiUpdate = 0;
+    public static int cal = 0;
+    public static long calUpdate = 0;
 
     private ImageView mHeaderImageView;
     private TextView mHeaderTitle;
@@ -80,15 +90,51 @@ public class DetailActivity extends Activity {
         loadItem();
     }
 
-    public void goMainPage(View view) {
-        Intent i = new Intent(this, mItem.getMainPageClass());
-        startActivity(i);
+    public void onDetailBackClick(View view) {
+        super.onBackPressed();
     }
 
     private void loadItem() {
         // Set the title TextView to the item's name and author
-        mHeaderTitle.setText(getString(R.string.image_header, mItem.getName(), mItem.getAuthor()));
-        mItemContent.setText(getString(mItem.getContentId()));
+        mHeaderTitle.setText(getString(R.string.image_header, mItem.getName()));
+        String str = "";
+        if ("Summary".equals(mItem.getName())) {
+            if (bmi > 0 && bmiUpdate > 0) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Date d = new Date(bmiUpdate);
+                DecimalFormat df = new DecimalFormat("#.##");
+                str = getString(R.string.bmi_intro) + "\n\n\n\n" +
+                        "\t\t\t\t\t\tYour BMI is " + df.format(bmi) + "    " + dateFormat.format(d) + "\n";
+            /* Underweight = < 18.5
+               Normal weight = 18.5 ~ 24.9
+               Overweight = 25 ~ 29.9
+               Obesity = BMI of 30 or greater */
+                if (bmi < 18.5) {
+                    str += "\t\t\t\t\t\tYou are underweight";
+                } else if (bmi >= 18.5 && bmi < 25) {
+                    str += "\t\t\t\t\t\tYou are normal weight";
+                } else if (bmi >= 25 && bmi < 30) {
+                    str += "\t\t\t\t\t\tYou are overweight. Time to exercise.";
+                } else if (bmi >= 30) {
+                    str += "\t\t\t\t\t\tYou are obesity. Time to control diet and exercise more.";
+                }
+            } else {
+                str += getString(R.string.bmi_intro);
+            }
+
+            if (cal != 0 && calUpdate > 0) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Date d = new Date(calUpdate);
+                str += "\n\n\n\n" + getString(R.string.cal_intro) + "\n\n\n\n" +
+                        "\t\t\t\t\t\tYour calories is " + cal + "    " + dateFormat.format(d) + "\n";
+            } else {
+                str += "\n\n\n\n" + getString(R.string.cal_intro);
+            }
+            mItemContent.setText(str);
+        } else {
+            mItemContent.setText("Under construction. Coming soon......");
+        }
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && addTransitionListener()) {
             // If we're running on Lollipop and we have added a listener to the shared element

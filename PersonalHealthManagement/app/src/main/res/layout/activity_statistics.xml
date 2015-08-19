@@ -12,10 +12,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Weight Statistic:"
         android:id="@+id/weightStatTextView"
-        android:layout_marginTop="31dp"
+        android:layout_marginTop="32dp"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/sleepTimeStattextView"
-        android:layout_alignEnd="@+id/sleepTimeStattextView" />
+        android:layout_toLeftOf="@+id/showWeightStatButton"
+        android:layout_toStartOf="@+id/showWeightStatButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,8 +25,8 @@
         android:id="@+id/heightStatTextView"
         android:layout_marginTop="43dp"
         android:layout_below="@+id/weightStatTextView"
-        android:layout_alignRight="@+id/weightStatTextView"
-        android:layout_alignEnd="@+id/weightStatTextView" />
+        android:layout_toLeftOf="@+id/showHeightStatButton"
+        android:layout_toStartOf="@+id/showHeightStatButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,74 +34,106 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Calories Statistic:"
         android:id="@+id/caloriesStatTextView"
-        android:layout_marginTop="35dp"
-        android:layout_below="@+id/heightStatTextView"
-        android:layout_alignRight="@+id/heightStatTextView"
-        android:layout_alignEnd="@+id/heightStatTextView" />
+        android:layout_alignBottom="@+id/showCalStatButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Sleep time Statistic:"
+        android:text="Sleep Statistic:"
         android:id="@+id/sleepTimeStattextView"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toLeftOf="@+id/showSleepStatButton"
+        android:layout_toStartOf="@+id/showSleepStatButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show"
         android:id="@+id/showWeightStatButton"
-        android:layout_alignTop="@+id/weightStatTextView"
-        android:layout_toRightOf="@+id/weightStatTextView"
-        android:layout_toEndOf="@+id/weightStatTextView"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="-10dp"
-        android:onClick="onShowWeightStatclick" />
+        android:onClick="onShowWeightStatclick"
+        android:layout_above="@+id/heightStatTextView"
+        android:layout_alignLeft="@+id/showHeightStatButton"
+        android:layout_alignStart="@+id/showHeightStatButton"
+        android:layout_marginBottom="-10dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show"
         android:id="@+id/showHeightStatButton"
-        android:layout_alignTop="@+id/heightStatTextView"
-        android:layout_alignLeft="@+id/showWeightStatButton"
-        android:layout_alignStart="@+id/showWeightStatButton"
-        android:layout_marginTop="-10dp"
-        android:onClick="onShowHeightStatclick" />
+        android:onClick="onShowHeightStatclick"
+        android:layout_alignBottom="@+id/heightStatTextView"
+        android:layout_toRightOf="@+id/caloriesStatTextView"
+        android:layout_toEndOf="@+id/caloriesStatTextView"
+        android:layout_marginBottom="-10dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show"
         android:id="@+id/showCalStatButton"
-        android:layout_alignTop="@+id/caloriesStatTextView"
-        android:layout_alignLeft="@+id/showHeightStatButton"
-        android:layout_alignStart="@+id/showHeightStatButton"
-        android:layout_marginTop="-10dp"
-        android:onClick="onShowCalStatclick" />
+        android:onClick="onShowCalStatclick"
+        android:layout_below="@+id/showHeightStatButton"
+        android:layout_toRightOf="@+id/caloriesStatTextView"
+        android:layout_toEndOf="@+id/caloriesStatTextView"
+        android:layout_marginBottom="-5dp"
+        android:layout_marginTop="30dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show"
         android:id="@+id/showSleepStatButton"
-        android:layout_alignTop="@+id/sleepTimeStattextView"
+        android:onClick="onShowSleepStatclick"
+        android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/showCalStatButton"
-        android:layout_alignStart="@+id/showCalStatButton"
-        android:layout_marginTop="-10dp"
-        android:onClick="onShowSleepStatclick" />
+        android:layout_alignStart="@+id/showCalStatButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Back"
         android:id="@+id/statBackButton"
-        android:layout_marginTop="62dp"
         android:onClick="onShowBackStatclick"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="52dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change to different unit by holding me for 2 secs"
+        android:id="@+id/statButtonBontextMenuWeight"
         android:layout_below="@+id/showSleepStatButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="31dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/statWeightUnitTextView"
+        android:layout_alignBottom="@+id/showWeightStatButton"
+        android:layout_toRightOf="@+id/showWeightStatButton"
+        android:layout_toEndOf="@+id/showWeightStatButton"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/statHeightUnitTextView"
+        android:layout_alignBottom="@+id/showHeightStatButton"
+        android:layout_alignLeft="@+id/statWeightUnitTextView"
+        android:layout_alignStart="@+id/statWeightUnitTextView"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="5dp" />
 
 </RelativeLayout>

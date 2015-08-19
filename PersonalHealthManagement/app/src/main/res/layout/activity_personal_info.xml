@@ -94,14 +94,6 @@
         android:layout_marginRight="20dp"
         android:onClick="onPersonalInfoBackClick" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/weightSpinner"
-        android:layout_alignTop="@+id/serverAccountEditText"
-        android:layout_alignLeft="@+id/heightSpinner"
-        android:layout_alignStart="@+id/heightSpinner" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -157,14 +149,6 @@
         android:layout_toEndOf="@+id/genderTextView"
         android:layout_marginBottom="-15dp" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/heightSpinner"
-        android:layout_alignTop="@+id/heightTextView"
-        android:layout_toRightOf="@+id/heightINEditText"
-        android:layout_toEndOf="@+id/heightINEditText" />
-
     <EditText
         android:layout_width="150dp"
         android:layout_height="wrap_content"
@@ -207,4 +191,40 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/weightUnitTextView"
+        android:layout_alignBottom="@+id/weightTextView"
+        android:layout_alignLeft="@+id/heightUnitTextView"
+        android:layout_alignStart="@+id/heightUnitTextView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/heightUnitTextView"
+        android:layout_above="@+id/saveSettingButton"
+        android:layout_toRightOf="@+id/serverAccountEditText"
+        android:layout_toEndOf="@+id/serverAccountEditText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="(You can change unit from options menu)"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/weightKGEditText"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="(You can change unit from options menu)"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/heightINEditText"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3" />
 </RelativeLayout>

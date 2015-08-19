@@ -67,10 +67,8 @@ public class MainActivity extends ActionBarActivity implements TaskCompleted {
     }
 
     public void signUp(View view) {
-
         username = usernameInput.getText().toString();
         pwd = pwdInput.getText().toString();
-
         // Check username input
         if (username.isEmpty()) {
             Toast.makeText(this, "Empty username!\nPlease try again.", Toast.LENGTH_LONG).show();
@@ -95,10 +93,26 @@ public class MainActivity extends ActionBarActivity implements TaskCompleted {
     }
 
     public void signIn(View view) {
-        UserProfile userPref = new UserProfile(Constants.DynamoDBManagerType.USER_LOGIN);
-        new DynamoDBManagerTask().execute(userPref);
         username = usernameInput.getText().toString();
         pwd = pwdInput.getText().toString();
+        // Check username input
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Empty username!\nPlease try again.", Toast.LENGTH_LONG).show();
+            usernameInput.getText().clear();
+            pwdInput.getText().clear();
+            return;
+        }
+
+        // Check password input
+        if (pwd.isEmpty()) {
+            Toast.makeText(this, "Empty password!\nPlease try again.", Toast.LENGTH_LONG).show();
+            usernameInput.getText().clear();
+            pwdInput.getText().clear();
+            return;
+        }
+
+        UserProfile userPref = new UserProfile(Constants.DynamoDBManagerType.USER_LOGIN);
+        new DynamoDBManagerTask().execute(userPref);
     }
 
     @Override
@@ -142,9 +156,6 @@ public class MainActivity extends ActionBarActivity implements TaskCompleted {
                         if (pwd.equals(res.getSValue())) {
                             Constants.currUserName = username;
                             Constants.currUserID = res.getIndexNo();
-                            /* Send data for retrieve person info */
-                            PersonalInfo.retrievePersonalInfo(localUP);
-                            Statistics.retrieveStatData(localUP);
                             Intent intent = new Intent(this, HomeActivity.class);
                             startActivity(intent);
                         } else {

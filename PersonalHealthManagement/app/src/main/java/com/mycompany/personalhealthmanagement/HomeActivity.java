@@ -61,6 +61,12 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
         } else if (mItem.getName().equals("Statistics")) {
             Intent intent = new Intent(this, Statistics.class);
             startActivity(intent);
+        } else if (mItem.getName().equals("Calories")) {
+            Intent intent = new Intent(this, CaloriesMain.class);
+            startActivity(intent);
+        } else if (mItem.getName().equals("User Preference")) {
+            Intent intent = new Intent(this, UserPreference.class);
+            startActivity(intent);
         } else {
             // Construct an Intent as normal
             Intent intent = new Intent(this, DetailActivity.class);

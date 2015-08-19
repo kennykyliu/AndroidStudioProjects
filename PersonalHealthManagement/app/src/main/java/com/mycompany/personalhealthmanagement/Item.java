@@ -23,11 +23,12 @@ package com.mycompany.personalhealthmanagement;
 public class Item {
 
     public static Item[] ITEMS = new Item[] {
-            new Item("Personal Info", "Romain Guya", R.drawable.health_apple, R.string.item_A, CaloriesMain.class),
-            new Item("Calories", "Romain Guya", R.drawable.health_apple, R.string.item_A, CaloriesMain.class),
-            new Item("Sleep management", "Romain Guyb", R.drawable.health_apple, R.string.item_B, CaloriesMain.class),
-            new Item("Statistics", "Romain Guyc", R.drawable.health_apple, R.string.item_C, Statistics.class),
-            new Item("Summary", "Romain Guyd", R.drawable.health_summary, R.string.bacon_ipsum, CaloriesMain.class),
+        new Item("Personal Info", R.drawable.personal_info, 0, PersonalInfo.class),
+        new Item("Calories", R.drawable.health_apple, 0, CaloriesMain.class),
+        new Item("Sleep management", R.drawable.sleep, 0, CaloriesMain.class),
+        new Item("Statistics", R.drawable.statistics, 0, Statistics.class),
+        new Item("Summary", R.drawable.health_summary, R.string.bmi_intro, DetailActivity.class),
+        new Item("User Preference", R.drawable.settings, 0, UserPreference.class)
     };
 
     public static Item getItem(int id) {
@@ -40,25 +41,19 @@ public class Item {
     }
 
     private final String mName;
-    private final String mAuthor;
     private final int mImageId;
     private final int mContentId;
     private Class<?>  mMainPageClass;
 
-    Item (String name, String author, int imageId, int contentId, Class<?> mainPageClass) {
+    Item (String name, int imageId, int contentId, Class<?> mainPageClass) {
         mName = name;
-        mAuthor = author;
         mImageId = imageId;
         mContentId = contentId;
         mMainPageClass = mainPageClass;
     }
 
     public int getId() {
-        return mName.hashCode() + mAuthor.hashCode();
-    }
-
-    public String getAuthor() {
-        return mAuthor;
+        return mName.hashCode();
     }
 
     public String getName() {

@@ -1,0 +1,48 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.mycompany.personalhealthmanagement.UserPreference">
+
+    <PreferenceCategory
+        android:key="Preference_Screen"
+        android:title="Preference Screen" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="remember_user"
+            android:summary="Remember user name?"
+            android:title="User name" >
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="sensor_updates"
+            android:summary="Enable or disable data update from sensors for sleep behaviors auto detection."
+            android:title="Sensor setting" >
+        </CheckBoxPreference>
+        <ListPreference
+            android:defaultValue="1000"
+            android:dependency="sensor_updates"
+            android:entries="@array/updateInterval"
+            android:entryValues="@array/updateIntervalValues"
+            android:key="sensor_update_interval"
+            android:summary="Define how often sensor updates will be performed"
+            android:title="Updates interval" />
+
+        <SwitchPreference
+            android:key="cal"
+            android:defaultValue="true"
+            android:summary="Enable or disable calories auto alarm while meet threshold"
+            android:title="Calories Auto Alarm" >
+        </SwitchPreference>
+        <ListPreference
+            android:defaultValue="1001"
+            android:dependency="cal"
+            android:entries="@array/cal_threshold"
+            android:entryValues="@array/cal_threshold"
+            android:key="cal_threshold"
+            android:summary="Current threshold is 2000 calories"
+            android:title="Alarm Threshold"/>
+    </PreferenceCategory>
+</PreferenceScreen>

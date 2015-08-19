@@ -11,33 +11,27 @@
     <string name="item_A">ABC 123</string>
     <string name="item_B">DEF 456</string>
     <string name="item_C">GHI 789</string>
-    <string name="bacon_ipsum">
-        Bacon ipsum dolor sit amet venison shankle pork chop meatball tri-tip beef ribs turducken.
-        Strip steak ball tip boudin shank, turducken leberkas pork chop beef ribs ham hock sausage
-        frankfurter prosciutto doner ham. Bacon landjaeger ball tip, andouille chuck beef ribs jowl
-        kevin tri-tip turkey biltong frankfurter sausage. Boudin pork belly meatloaf chicken cow
-        tri-tip kielbasa shoulder. Pork loin pig boudin hamburger pastrami short ribs. Sirloin
-        tongue pork loin chicken spare ribs bresaola pastrami.\n\n
-        Tenderloin turducken pork chop, pork belly beef ribs brisket ham. Turducken landjaeger short
-        loin capicola pancetta pork chop strip steak rump meatloaf brisket kevin doner short ribs
-        salami. Beef prosciutto flank leberkas landjaeger swine. Fatback prosciutto sausage, jerky
-        tail tongue hamburger jowl biltong shank pork belly swine filet mignon chicken ground round.
-        Pork chop porchetta ground round tri-tip tail t-bone.\n\n
-        Landjaeger rump bacon salami sausage pork loin pig brisket strip steak corned beef. Biltong
-        sirloin meatloaf ribeye, bresaola cow chicken t-bone frankfurter andouille strip steak jerky
-        capicola. Ribeye porchetta strip steak boudin. Kielbasa cow brisket pastrami ball tip
-        tenderloin bresaola ham. Biltong andouille chuck ham hock jerky beef chicken, flank shankle
-        ball tip venison porchetta kevin fatback kielbasa. Boudin tongue ground round, turkey pork
-        belly salami corned beef pork tri-tip meatloaf sausage andouille strip steak pig. Spare ribs
-        beef meatloaf rump sausage doner frankfurter.\n\n
-        Fatback porchetta pork loin meatball, turducken pork chop drumstick boudin. Kevin tri-tip
-        ground round corned beef, ribeye swine filet mignon salami pork spare ribs pork chop
-        brisket. Filet mignon shankle t-bone bacon. Turducken capicola turkey porchetta kielbasa
-        shank pork loin jerky venison tenderloin boudin ham hock ground round.</string>
+    <string name="bmi_intro">
+        The body mass index (BMI), or Quetelet index, is a value derived from the mass (weight) and
+        height of an individual. The BMI is defined as the body mass divided by the square of the
+        body height, and is universally expressed in units of kg/m2, resulting from weight in
+        kilograms and height in metres. The BMI may also be determined using a table or chart which
+        displays BMI as a function of mass and height using contour lines or colors for different
+        BMI categories, and may use two different units of measurement.
+    </string>
+    <string name="cal_intro">
+        Calorie is a unit of heat used to indicate the amount of energy that foods will produce in the human body.
+        The number of calories you need to eat each day depends on several factors, including your
+        age, size, height, sex, lifestyle, and overall general health.\n
+        Recommended daily calorie intakes vary across the world. According to the National Health
+        Service (NHS), UK, the average male adult needs approximately 2,500 calories per day to
+        keep his weight constant, while the average adult female needs 2,000. US authorities
+        recommend 2,700 calories per day for men and 2,200 for women.
+    </string>
     <string name="main_description">This is a basic Activity showing an Action Bar which has been
         styled.
     </string>
-    <string name="image_header">%1$s by %2$s</string>
+    <string name="image_header">%1$s</string>
     <string name="title_activity_detail">DetailActivity</string>
 
     <string name="hello_world">Hello world!</string>
@@ -45,24 +39,44 @@
     <string name="title_activity_square_frame_layout">SquareFrameLayout</string>
     <color name="white">#FFFFFF</color>
     <string name="title_activity_calorie">Calorie</string>
-    <string name="title_activity_calories_main">CaloriesMain</string>
+    <string name="title_activity_calories_main">Calories Calculate</string>
     <string name="title_activity_calories_item_select">CaloriesItemSelect</string>
     <string name="intro_message">test</string>
-    <string name="title_activity_personal_info">PersonalInfo</string>
-    <string-array name="weight_unit">
-        <item>kg</item>>
-        <item>lb</item>>
-    </string-array>
+    <string name="title_activity_personal_info">Personal Information</string>
+    <string name="weight_unit_kg">kg</string>
+    <string name="weight_unit_lb">lb</string>
+    <string name="height_unit_cm">cm</string>
+    <string name="height_unit_in">in</string>
     <string-array name="gender_unit">
         <item>Male</item>>
         <item>Female</item>>
     </string-array>
-    <string-array name="height_unit">
-        <item>cm</item>>
-        <item>in</item>>
-    </string-array>
-    <string name="title_activity_simple_xyplot">SimpleXYPlotActivity</string>
+
     <string name="ts_plot1_title">Yearly UFO Sightings</string>
     <string name="title_activity_cognito_setting">cognitoSetting</string>
     <string name="title_activity_statistics">Statistics</string>
+    <string name="title_activity_simple_xyplot">plot</string>
+    <string name="title_activity_user_preference">UserPreference</string>
+    <string-array name="updateInterval">
+        <item name="15">Every 15 minutes</item>
+        <item name="30">Every 30 minutes</item>
+        <item name="45">Every 45 minutes</item>
+        <item name="60">Every  1 hour</item>
+        <item name="120">Every  2 hours</item>
+    </string-array>
+    <string-array name="updateIntervalValues">
+        <item name="15">15</item>
+        <item name="30">30</item>
+        <item name="45">45</item>
+        <item name="60">60</item>
+        <item name="120">120</item>
+    </string-array>
+    <string-array name="cal_threshold">
+        <item name="1000">1000</item>
+        <item name="2000">2000</item>
+        <item name="3000">3000</item>
+        <item name="4000">4000</item>
+
+    </string-array>
+    <string name="title_activity_sleep_management">SleepManagement</string>
 </resources>
