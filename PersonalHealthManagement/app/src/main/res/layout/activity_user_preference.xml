@@ -45,4 +45,14 @@
             android:summary="Current threshold is 2000 calories"
             android:title="Alarm Threshold"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="Preference_photo_manager"
+        android:title="Preference Photo Manager" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="photo_auto_upload"
+            android:summary="Upload photo automatically after capturing?"
+            android:title="Photo auto upload" >
+        </CheckBoxPreference>
+    </PreferenceCategory>
 </PreferenceScreen>

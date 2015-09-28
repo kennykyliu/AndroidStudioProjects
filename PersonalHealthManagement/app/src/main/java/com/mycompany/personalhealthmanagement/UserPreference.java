@@ -1,7 +1,10 @@
 package com.mycompany.personalhealthmanagement;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,6 +15,19 @@ public class UserPreference extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.layout.activity_user_preference);
+        CheckBoxPreference pref = (CheckBoxPreference) findPreference("photo_auto_upload");
+        pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue)
+            {
+                boolean checked = Boolean.valueOf(newValue.toString());
+                Constants.photoAutoUpload = checked;
+                Log.i("User pref", "Photo Auto Upload = " + checked);
+
+                return true;
+            }
+        });
     }
 
     @Override

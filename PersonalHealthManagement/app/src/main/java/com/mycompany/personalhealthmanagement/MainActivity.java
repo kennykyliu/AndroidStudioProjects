@@ -1,10 +1,12 @@
 package com.mycompany.personalhealthmanagement;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +15,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements TaskCompleted {
@@ -26,6 +39,9 @@ public class MainActivity extends ActionBarActivity implements TaskCompleted {
     private ImageView titleImage;
     private String username = null;
     private TaskCompleted mCallback;
+    private boolean bucketExists = false;
+    private boolean bucketChecked = false;
+    private File mFile;
     String pwd = null;
 
     private ProgressDialog dialog;
@@ -42,6 +58,7 @@ public class MainActivity extends ActionBarActivity implements TaskCompleted {
         titleImage.setImageResource(R.drawable.health_guy);
 
         DynamoDBManager.init(MainActivity.this);
+        new CheckS3BucketExists().execute();
     }
 
     @Override
@@ -230,5 +247,47 @@ public class MainActivity extends ActionBarActivity implements TaskCompleted {
                 mCallback.onTaskComplete(result.getTaskType(), result.getItemList());
             }
         }
+    }
+
+    private class CheckS3BucketExists extends AsyncTask<Object, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Object... params) {
+            AmazonS3Client sS3Client = Util.getS3Client(getApplicationContext());
+            return Util.doesBucketExist();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            bucketChecked = true;
+            bucketExists = result;
+            Log.i(TAG, "Check bucket exist result = " + bucketExists);
+        }
+    }
+
+    private void addUserIntoFile(String username, String pwd) {
+        try {
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Constants.USER_LIST_FILE_NAME)));
+            try {
+                pw.println(username + "," + pwd);
+            } finally {
+                pw.close();
+            }
+
+            mFile = new File(Constants.USER_LIST_FILE_NAME);
+            FileOutputStream is = new FileOutputStream(mFile);
+            OutputStreamWriter osw = new OutputStreamWriter(is);
+            Writer w = new BufferedWriter(osw);
+            w.write(username + "," + pwd);
+            w.close();
+        } catch (IOException e) {
+            Log.e(TAG, "", e);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

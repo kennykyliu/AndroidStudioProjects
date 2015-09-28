@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/hideable_text_color"
-        android:layout_alignTop="@+id/imageView" />
+        android:layout_alignTop="@+id/mImageView" />
 
     <CheckBox
         android:id="@+id/CalItemCheck"

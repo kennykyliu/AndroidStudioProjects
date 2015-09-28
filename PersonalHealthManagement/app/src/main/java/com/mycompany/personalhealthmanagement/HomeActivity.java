@@ -2,11 +2,13 @@ package com.mycompany.personalhealthmanagement;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +69,11 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
         } else if (mItem.getName().equals("User Preference")) {
             Intent intent = new Intent(this, UserPreference.class);
             startActivity(intent);
+        } else if (mItem.getName().equals("Photo Manager")) {
+            Intent intent = new Intent(this, PhotoManager.class);
+            startActivity(intent);
+        } else if (mItem.getName().equals("Log out")) {
+            onBackPressed();
         } else {
             // Construct an Intent as normal
             Intent intent = new Intent(this, DetailActivity.class);
@@ -132,5 +139,38 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
 
             return view;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Log Out?");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setMessage("Do you want to log out");
+        builder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+                        PersonalInfo.cleanUpData();
+                        CaloriesMain.cleanUpData();
+                        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // clears all previous activities task
+                        finish(); // destroy current activity..
+                        startActivity(intent); // starts new activity
+                    }
+                }).setCancelable(false);
+        builder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+                    }
+                }).setCancelable(false);
+
+        builder.show();
     }
 }

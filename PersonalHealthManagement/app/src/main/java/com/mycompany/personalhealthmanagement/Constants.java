@@ -15,6 +15,7 @@
 
 package com.mycompany.personalhealthmanagement;
 
+import java.util.List;
 import java.util.Random;
 
 public class Constants {
@@ -22,8 +23,11 @@ public class Constants {
     public static final String ACCOUNT_ID = "961239280963";
     public static final String IDENTITY_POOL_ID = "us-east-1:8f762fd9-6a40-4676-8c03-1b1eb447d67c";
     public static final String UNAUTH_ROLE_ARN = "arn:aws:iam::961239280963:role/Cognito_PersonalHealthManagementUnauth_Role";
+    public static final String PHOTO_MANAGER_BUCKET_NAME = "awsphotomanager";
+    public static final String USER_LIST_FILE_NAME = "userlist.txt";
     public static final String TABLE_NAME = "PHM";
     public static final int MAX_SIGNUP_USER = 999;
+    public static final int DATA_REFRESH_DELAY = 500;
     public static final Random random = new Random();
     public static final String[] NAMES = new String[] {
             "Trevor", "Jim", "Jason", "Zach", "Matt", "Glenn", "Will", "Wade", "Trevor", "Jeremy",
@@ -31,6 +35,9 @@ public class Constants {
     };
     public static String currUserName = null;
     public static long currUserID = 0;
+    public static String currAlbumName = null;
+    public static List<String> albumNameList;
+    public static boolean photoAutoUpload = true;
 
     public static String getRandomName() {
         int name = random.nextInt(NAMES.length);

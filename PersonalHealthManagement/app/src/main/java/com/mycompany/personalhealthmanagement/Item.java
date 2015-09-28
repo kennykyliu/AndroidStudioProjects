@@ -25,10 +25,13 @@ public class Item {
     public static Item[] ITEMS = new Item[] {
         new Item("Personal Info", R.drawable.personal_info, 0, PersonalInfo.class),
         new Item("Calories", R.drawable.health_apple, 0, CaloriesMain.class),
-        new Item("Sleep management", R.drawable.sleep, 0, CaloriesMain.class),
+        new Item("Sleep Management", R.drawable.sleep, 0, CaloriesMain.class),
         new Item("Statistics", R.drawable.statistics, 0, Statistics.class),
         new Item("Summary", R.drawable.health_summary, R.string.bmi_intro, DetailActivity.class),
-        new Item("User Preference", R.drawable.settings, 0, UserPreference.class)
+        new Item("Photo Manager", R.drawable.camera, 0, PhotoManager.class),
+        new Item("User Preference", R.drawable.settings, 0, UserPreference.class),
+        new Item("Log out", R.drawable.logout, 0, null),
+
     };
 
     public static Item getItem(int id) {

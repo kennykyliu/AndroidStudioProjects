@@ -425,6 +425,7 @@ public class CaloriesMain extends ActionBarActivity implements ActionBar.TabList
                             foodCheckedList = null;
                             beverageCheckedList = null;
                             exerciseCheckedList = null;
+                            totalCal = 0;
 
                             Intent intent = new Intent(
                                     CaloriesMain.this,
@@ -437,5 +438,13 @@ public class CaloriesMain extends ActionBarActivity implements ActionBar.TabList
         } else {
             super.onBackPressed();
         }
+    }
+
+    public static void cleanUpData() {
+        foodCheckedList = null;
+        beverageCheckedList = null;
+        exerciseCheckedList = null;
+        totalCal = 0;
+        savedCal = 0;
     }
 }

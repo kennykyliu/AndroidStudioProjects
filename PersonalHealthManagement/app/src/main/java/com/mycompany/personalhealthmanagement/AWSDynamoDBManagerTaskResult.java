@@ -6,6 +6,7 @@ public class AWSDynamoDBManagerTaskResult {
     private Constants.DynamoDBManagerType taskType;
     private String tableStatus;
     private ArrayList<UserProfile> resultList;
+    
 
     public Constants.DynamoDBManagerType getTaskType() {
         return taskType;

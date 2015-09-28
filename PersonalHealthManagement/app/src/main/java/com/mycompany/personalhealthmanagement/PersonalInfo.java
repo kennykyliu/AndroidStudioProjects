@@ -404,4 +404,14 @@ public class PersonalInfo extends ActionBarActivity implements TaskCompleted {
             }
         }
     }
+
+    public static void cleanUpData() {
+        age = 0;
+        weightKG = 0;
+        weightLB = 0;
+        heightCM = 0;
+        heightFT = 0;
+        heightIN = 0;
+        date = 0;
+    }
 }
